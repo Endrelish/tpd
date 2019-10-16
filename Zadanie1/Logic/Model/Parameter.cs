@@ -1,20 +1,23 @@
 using System;
 
-public class Parameter<T> : IParameter<T>
+namespace Logic.Model
 {
-    public Parameter(string name, T value, T min, T max)
+    public class Parameter<T> : IParameter<T>
     {
-        Name = name;
-        Value = value;
-        Min = min;
-        Max = max;
+        public Parameter(string name, T value, T min, T max)
+        {
+            Name = name;
+            Value = value;
+            Min = min;
+            Max = max;
+        }
+        public string Name { get; }
+        public T Value { get; }
+
+        public T Max { get; }
+
+        public T Min { get; }
+
+        public Type Type => Value.GetType();
     }
-    public string Name { get; }
-    public T Value { get; }
-
-    public T Max { get; }
-
-    public T Min { get; }
-
-    public Type Type => Value.GetType();
 }

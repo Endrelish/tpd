@@ -1,7 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using Logic.Model;
 
-public class OptimisticMinMax : MinMaxBase
+namespace Logic.Criteria
 {
-    protected override double GetCaseCriterion(IList<double> values) => values.Max();
+    public class OptimisticMinMax : MinMaxBase
+    {
+        protected override double GetCaseCriterion(IList<double> values) => values.Max();
+    }
 }

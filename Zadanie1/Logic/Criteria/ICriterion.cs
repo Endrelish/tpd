@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using Logic.Model;
 
-public interface ICriterion
+namespace Logic.Criteria
 {
-    IEnumerable<string> Choose(IDictionary<string, IList<double>> cases, IDictionary<string, object> parameters);
-    IEnumerable<IParameter<object>> GetParameters();
+    public interface ICriterion
+    {
+        IEnumerable<string> Choose(IDictionary<string, IList<double>> cases, IDictionary<string, object> parameters);
+        IEnumerable<IParameter<object>> GetParameters();
+    }
 }

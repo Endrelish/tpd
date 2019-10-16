@@ -1,23 +1,27 @@
 using System.Collections.Generic;
 using System.Linq;
+using Logic.Model;
 
-public abstract class MinMaxBase : ICriterion
+namespace Logic.Criteria
 {
-    public IEnumerable<string> Choose(IDictionary<string, IList<double>> cases, IDictionary<string, object> parameters)
+    public abstract class MinMaxBase : ICriterion
     {
-        var criteria = cases
-            .ToDictionary(c => c.Key, c => GetCaseCriterion(c.Value));
-        var max = cases.Max(c => c.Value);
+        public IEnumerable<string> Choose(IDictionary<string, IList<double>> cases, IDictionary<string, object> parameters)
+        {
+            var criteria = cases
+                .ToDictionary(c => c.Key, c => GetCaseCriterion(c.Value));
+            var max = cases.Max(c => c.Value);
 
-        return cases
-            .Where(c => double.Equals(c, max))
-            .Select(c => c.Key);
+            return cases
+                .Where(c => double.Equals(c, max))
+                .Select(c => c.Key);
+        }
+
+        public IEnumerable<IParameter<object>> GetParameters()
+        {
+            return Enumerable.Empty<IParameter<object>>();
+        }
+
+        protected abstract double GetCaseCriterion(IList<double> cases);
     }
-
-    public IEnumerable<IParameter<object>> GetParameters()
-    {
-        return Enumerable.Empty<IParameter<object>>();
-    }
-
-    protected abstract double GetCaseCriterion(IList<double> cases);
 }
