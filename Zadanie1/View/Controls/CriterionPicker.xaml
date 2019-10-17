@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="View.Controls.CriterionPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:View.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="250">
+    <StackPanel Margin="10 10 10 10">
+        <Border BorderThickness="1" BorderBrush="LightGray" Padding="5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Margin="5,5,5,5" Grid.Row="0" Grid.Column="0">Number of states:</Label>
+            <TextBox Margin="5,5,5,5" Grid.Row="0" Grid.Column="1" Width="30" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label Margin="5,5,5,5" Grid.Row="1" Grid.Column="0">Number of cases:</Label>
+            <TextBox Margin="5,5,5,5" Grid.Row="1" Grid.Column="1" Width="30" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+            <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="10,2,10,2" Margin="5,5,5,5">Generate table</Button>
+        </Grid>
+        </Border>
+        <Border BorderThickness="1" BorderBrush="LightGray" Margin="0 5 0 0" Padding="10">
+            <StackPanel>
+                <ComboBox ItemsSource="{Binding Path=Criteria}" DisplayMemberPath="Key"
+                          SelectedValuePath="Value" SelectedValue="{Binding Path=CurrentCriterion}" />
+                <local:SingleParameters  DataContext="{Binding}" />
+                <local:CollectionParameters DataContext="{Binding}" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>
