@@ -18,11 +18,11 @@ namespace ViewModel
 
         public InputViewModel()
         {
-            _stateLabels = new List<string> {"A", "B"};
+            _stateLabels = new List<string> {"First state", "Second state"};
             _cases = new Dictionary<string, List<double>>
             {
-                ["I"] = new List<double> {0.0d, 0.0d},
-                ["II"] = new List<double> {0.0d, 0.0d}
+                ["First case"] = new List<double> {0.0d, 0.0d},
+                ["Second case"] = new List<double> {0.0d, 0.0d}
             };
         }
 

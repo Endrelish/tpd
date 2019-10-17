@@ -13,9 +13,41 @@
         <viewModel:InputViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
-        
+        <DataTemplate x:Key="Template">
+            <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Text="{Binding Mode=OneTime}" BorderBrush="Transparent"/>
+        </DataTemplate>
+        <DataTemplate x:Key="ColumnTemplate">
+            <StackPanel VerticalAlignment="Top">
+                <TextBox Text="{Binding Key, Mode=OneWay}" BorderBrush="Transparent"/>
+                <ListView ItemsSource="{Binding Value}" BorderBrush="Transparent" ItemTemplate="{StaticResource Template}"/>
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="FieldStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="Padding" Value="0,0,0,0" />
+        </Style>
     </UserControl.Resources>
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0">
+            <TextBox Text="" IsReadOnly="True" HorizontalAlignment="Stretch" Height="24" BorderBrush="Transparent"/>
+            <ListView ItemsSource="{Binding StateLabels}" ItemTemplate="{StaticResource Template}" ItemContainerStyle="{StaticResource FieldStyle}" BorderBrush="Transparent" />
+        </StackPanel>
+        <ListView Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Cases}" ItemTemplate="{StaticResource ColumnTemplate}" BorderBrush="Transparent">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
     </Grid>
 </UserControl>
