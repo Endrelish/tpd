@@ -10,8 +10,8 @@ namespace Model.Criteria
             IDictionary<string, object> parameters)
         {
             var maxLosses = GetLosses(cases).ToDictionary(c => c.Key, c => c.Value.Max());
-            var maxLoss = maxLosses.Max(l => l.Value);
-            return maxLosses.Where(l => Equals(l.Value, maxLoss)).Select(l => l.Key);
+            var minLoss = maxLosses.Min(l => l.Value);
+            return maxLosses.Where(l => Equals(l.Value, minLoss)).Select(l => l.Key);
         }
 
         public IEnumerable<Parameter> GetParameters()

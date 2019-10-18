@@ -5,17 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:View.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="300">
+             d:DesignHeight="100" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate x:Key="AttributeList">
-            <ListView ItemsSource="{Binding Value}" ItemTemplate="{StaticResource Attribute}" />
+            <ListView ItemsSource="{Binding Parameters}" ItemTemplate="{StaticResource Attribute}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" BorderThickness="0"/>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <ListView Grid.Row="0" ItemsSource="{Binding CollectionParameters}" ItemTemplate="{StaticResource AttributeList}" />
-    </Grid>
+    <ListView ItemsSource="{Binding CollectionParameters}"
+                  ItemTemplate="{StaticResource AttributeList}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" BorderThickness="0" />
 </UserControl>

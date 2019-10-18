@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -7,15 +8,16 @@ namespace ViewModel.Model
 {
     public class CollectionParameter : SingleParameter
     {
-        private readonly List<SingleParameter> _parameters;
+        private readonly ObservableCollection<SingleParameter> _parameters;
 
         public CollectionParameter(string name, double value, double min, double max, bool sumsUp, int states)
         :base(name, value, min, max)
         {
             SumsUp = sumsUp;
             var val = Max / states;
-            _parameters = Enumerable.Repeat(new SingleParameter(Name, val, Min, Max, 0, BindValues), states)
-                .ToList();
+            _parameters = new ObservableCollection<SingleParameter>();
+            for(var i = 0; i < states; i++)
+                _parameters.Add(new SingleParameter(Name, val, Min, Max, i, BindValues));
         }
 
         public bool SumsUp { get; set; }
@@ -48,8 +50,32 @@ namespace ViewModel.Model
 
         private void BindValues(int index)
         {
-            var remaining = Max - _parameters.Sum(p => p.Value);
-            _parameters[GoToNextIndex(index)].Value += remaining;
+            while (true)
+            {
+                var remaining = Max - _parameters.Sum(par => par.Value);
+                var i = GoToNextIndex(index);
+                var p = _parameters[i];
+                if (p.Value + remaining < Min)
+                    if (Math.Abs(p.Value - Min) < double.Epsilon)
+                    {
+                        index = i;
+                        continue;
+                    }
+                    else
+                        p.Value = Min;
+                else if (_parameters[i].Value + remaining > Max)
+                    if (Math.Abs(p.Value - Max) < double.Epsilon)
+                    {
+                        index = i;
+                        continue;
+                    }
+                    else
+                        p.Value = Max;
+                else
+                    _parameters[i].Value += remaining;
+
+                break;
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Model.Model;
@@ -11,10 +12,10 @@ namespace Model.Criteria
         {
             var criteria = cases
                 .ToDictionary(c => c.Key, c => GetCaseCriterion(c.Value));
-            var max = cases.Max(c => c.Value);
+            var max = criteria.Max(c => c.Value);
 
-            return cases
-                .Where(c => Equals(c, max))
+            return criteria
+                .Where(c => Math.Abs(c.Value - max) < double.Epsilon)
                 .Select(c => c.Key);
         }
 

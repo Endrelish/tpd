@@ -5,19 +5,23 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\csv.png" />
     <None Remove="Resources\minus.png" />
     <None Remove="Resources\plus.png" />
+    <None Remove="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\csv.png" />
     <Resource Include="Resources\minus.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\plus.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\refresh.png" />
   </ItemGroup>
 
 </Project>

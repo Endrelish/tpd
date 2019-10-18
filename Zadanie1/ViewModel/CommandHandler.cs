@@ -4,9 +4,9 @@ using ViewModel.Model;
 
 namespace ViewModel
 {
-    public class CommandHandler : ICommand
+    public class CommandHandler<T> : ICommand where T : class
     {
-        private Action<ObservableValue<string>> _action;
+        private Action<T> _action;
         private Func<bool> _canExecute;
 
         /// <summary>
@@ -14,7 +14,7 @@ namespace ViewModel
         /// </summary>
         /// <param name="action">Action to be executed by the command</param>
         /// <param name="canExecute">A bolean property to containing current permissions to execute the command</param>
-        public CommandHandler(Action<ObservableValue<string>> action, Func<bool> canExecute)
+        public CommandHandler(Action<T> action, Func<bool> canExecute)
         {
             _action = action;
             _canExecute = canExecute;
@@ -48,7 +48,7 @@ namespace ViewModel
 
         public void Execute(object parameter)
         {
-            _action(parameter as ObservableValue<string>);
+            _action(parameter as T);
         }
 
     }
