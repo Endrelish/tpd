@@ -4,7 +4,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Permissions;
+using System.Windows.Input;
 using ViewModel.Annotations;
+using ViewModel.Model;
 
 namespace ViewModel
 {
@@ -12,18 +15,30 @@ namespace ViewModel
     {
         private Action _stateAddCallback;
         private Action _stateRemoveCallback;
-        private readonly List<string> _stateLabels;
-        private readonly Dictionary<string, List<double>> _cases;
+        private readonly ObservableCollection<KeyValuePair<ObservableValue<string>, ObservableCollection<ObservableValue<double>>>> _states;
+        private readonly ObservableCollection<ObservableValue<string>> _caseLabels;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public InputViewModel()
         {
-            _stateLabels = new List<string> {"First state", "Second state"};
-            _cases = new Dictionary<string, List<double>>
+            _caseLabels = new ObservableCollection<ObservableValue<string>>{"Case 1", "Case 2"};
+            _states = new ObservableCollection<KeyValuePair<ObservableValue<string>, ObservableCollection<ObservableValue<double>>>>
             {
-                ["First case"] = new List<double> {0.0d, 0.0d},
-                ["Second case"] = new List<double> {0.0d, 0.0d}
+                new KeyValuePair<ObservableValue<string>, ObservableCollection<ObservableValue<double>>>("State 1", new ObservableCollection<ObservableValue<double>> {0.0d, 0.0d}),
+                new KeyValuePair<ObservableValue<string>, ObservableCollection<ObservableValue<double>>>("State 2", new ObservableCollection<ObservableValue<double>> {0.0d, 0.0d})
             };
+
+            AddStateCommand = new CommandHandler(AddState, () => true);
+            AddCaseCommand = new CommandHandler(AddCase, () => true);
+            RunCommand = new CommandHandler(Run, () => true);
+            RemoveCaseCommand = new CommandHandler(RemoveCase, () => true);
+            RemoveStateCommand = new CommandHandler(RemoveState, () => true);
+        }
+
+        private void Run()
+        {
+            var cases = CaseLabels;
+            var states = States;
         }
 
         public void InitializeCallbacks(Action stateAddCallback, Action stateRemoveCallback)
@@ -32,34 +47,46 @@ namespace ViewModel
             _stateRemoveCallback = stateRemoveCallback;
         }
 
-        public IEnumerable<string> StateLabels => _stateLabels;
-        public IReadOnlyDictionary<string, List<double>> Cases => _cases;
+        public IEnumerable<ObservableValue<string>> CaseLabels => _caseLabels;
+
+        public IEnumerable<KeyValuePair<ObservableValue<string>, ObservableCollection<ObservableValue<double>>>> States => _states;
+
+        public ICommand AddStateCommand { get; }
+
+        public ICommand AddCaseCommand { get; }
+        public ICommand RunCommand { get; }
+
+        public ICommand RemoveCaseCommand { get; }
+        public ICommand RemoveStateCommand { get; }
 
         public void AddState()
         {
-            _stateLabels.Add(string.Empty);
-            foreach (var c in _cases)
-                c.Value.Add(0.0d);
+            _states.Add(new KeyValuePair<ObservableValue<string>, ObservableCollection<ObservableValue<double>>>("New state",
+                new ObservableCollection<ObservableValue<double>>(Enumerable.Repeat<ObservableValue<double>>(0.0d, _caseLabels.Count))));
             _stateAddCallback();
         }
 
-        public void RemoveState(string state)
+        public void RemoveState(ObservableValue<string> state)
         {
-            var index = _stateLabels.FindIndex(s => s.Equals(state));
-            _stateLabels.RemoveAt(index);
-            foreach (var c in _cases)
-                c.Value.RemoveAt(index);
+            var index = _states.IndexOf(_states.FirstOrDefault(s => s.Key.Equals(state)));
+            _states.RemoveAt(index);
             _stateRemoveCallback();
         }
 
         public void AddCase()
         {
-            _cases.Add(string.Empty, Enumerable.Repeat(0.0d, _stateLabels.Count).ToList());
+            _caseLabels.Add("New case");
+            foreach (var state in _states)
+                state.Value.Add(0.0d);
+            
         }
 
-        public void RemoveCase(string caseKey)
+        public void RemoveCase(ObservableValue<string> caseKey)
         {
-            _cases.Remove(caseKey);
+            var index = _caseLabels.IndexOf(caseKey);
+            _caseLabels.RemoveAt(index);
+            foreach (var st in _states)
+                st.Value.RemoveAt(index);
         }
 
         [NotifyPropertyChangedInvocator]

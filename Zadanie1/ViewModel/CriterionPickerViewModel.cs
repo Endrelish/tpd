@@ -79,7 +79,7 @@ namespace ViewModel
 
         private void SetParameters()
         {
-            var states = _inputViewModel.StateLabels.Count();
+            var states = _inputViewModel.States.Count();
             var parameters = CurrentCriterion.GetParameters().ToList();
             SingleParameters = parameters
                 .Where(p => !p.IsCollection)

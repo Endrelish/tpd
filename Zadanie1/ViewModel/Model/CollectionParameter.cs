@@ -37,13 +37,13 @@ namespace ViewModel.Model
             _parameters.Remove(last);
             if (!SumsUp) return;
 
-            var index = GoToNextIndex(last.Index);
+            var index = 0;
             _parameters[index].Value += last.Value;
         }
 
         private int GoToNextIndex(int index)
         {
-            return index + 1 == _parameters.Count ? 0 : index + 1;
+            return index + 1 >= _parameters.Count ? 0 : index + 1;
         }
 
         private void BindValues(int index)

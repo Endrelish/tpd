@@ -13,5 +13,6 @@ namespace ViewModel
 
         public CriterionPickerViewModel CriterionPickerViewModel { get; }
         public InputViewModel InputViewModel { get; }
+        public string TestProp { get; set; } = "sdf";
     }
 }
