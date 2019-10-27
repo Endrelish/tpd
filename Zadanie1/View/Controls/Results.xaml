@@ -16,6 +16,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
@@ -23,6 +24,7 @@
                     Background="{StaticResource RefreshButton}"
                     Margin="20"
                     Command="{Binding RunCommand}"
+                    CommandParameter="{Binding ElementName=ResultsControl, Path=PlaySound}"
                     BorderThickness="0" />
             <Button Grid.Column="1"
                     Width="40" Height="40"
@@ -31,7 +33,10 @@
                     Command="{Binding OpenFileCommand}"
                     CommandParameter="{Binding ElementName=ResultsControl, Path=OpenFileDialog}"
                     BorderThickness="0" />
-            <ListBox Grid.Column="2" ItemsSource="{Binding Results}" />
+            <StackPanel Grid.Column="3" Margin="0,0,20,0">
+                <Label>Results:</Label>
+                <ListBox ItemsSource="{Binding Results}" BorderThickness="0" />
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>

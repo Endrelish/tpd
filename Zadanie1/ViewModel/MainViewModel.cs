@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Windows.Input;
 using Model.CsvReader;
 using ViewModel.Annotations;
@@ -21,7 +20,7 @@ namespace ViewModel
             InputViewModel = new InputViewModel();
             CriterionPickerViewModel = new CriterionPickerViewModel(InputViewModel);
             InputViewModel.InitializeCallbacks(CriterionPickerViewModel.AddStateParameters, CriterionPickerViewModel.RemoveStateParameters);
-            RunCommand = new CommandHandler<object>(Run, () => true);
+            RunCommand = new CommandHandler<Action>(Run, () => true);
             OpenFileCommand = new CommandHandler<Func<string>>(OpenFile, () => true);
         }
 
@@ -54,9 +53,10 @@ namespace ViewModel
                         s.Key, new ObservableCollection<ObservableValue<double>>(
                             s.Value.Select(v => new ObservableValue<double>(v)))))
                 );
+            CriterionPickerViewModel.SetParameters();
         }
 
-        private void Run()
+        private void Run(Action playSound)
         {
             var criterion = CriterionPickerViewModel.CurrentCriterion;
             var parameters = CriterionPickerViewModel.CollectionParameters
@@ -71,6 +71,7 @@ namespace ViewModel
                 )).ToDictionary(c => c.Key, c => c.Value);
 
             Results = criterion.Choose(cases, parameters).ToList();
+            playSound();
         }
 
         public IEnumerable<string> Results

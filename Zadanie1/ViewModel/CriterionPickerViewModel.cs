@@ -21,11 +21,11 @@ namespace ViewModel
             _inputViewModel = inputViewModel;
             Criteria = new Dictionary<string, ICriterion>
             {
-                ["Kryterium Bayesa"] = new Bayes(),
-                ["Kryterium Hurwicza"] = new Hurwicz(),
-                ["Kryterium Minimax użyteczności"] = new PesimisticMinMax(),
-                ["Kryterium Minimax zawodu"] = new OptimisticMinMax(),
-                ["Kryterium Savage'a"] = new Savage()
+                ["Bayes"] = new Bayes(),
+                ["Hurwicz"] = new Hurwicz(),
+                ["Pessimistic MinMax"] = new PessimisticMinMax(),
+                ["Optimistic MinMax"] = new OptimisticMinMax(),
+                ["Savage"] = new Savage()
             };
             CurrentCriterion = Criteria.Values.First();
         }
@@ -77,7 +77,7 @@ namespace ViewModel
             }
         }
 
-        private void SetParameters()
+        public void SetParameters()
         {
             var states = _inputViewModel.States.Count();
             var parameters = CurrentCriterion.GetParameters().ToList();

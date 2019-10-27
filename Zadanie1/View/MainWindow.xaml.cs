@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Media;
+using System.Windows;
 
 namespace View
 {
@@ -10,6 +11,14 @@ namespace View
         public MainWindow()
         {
             InitializeComponent();
+            Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+        }
+
+        void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+
+            MessageBox.Show(e.Exception.Message);
         }
     }
 }

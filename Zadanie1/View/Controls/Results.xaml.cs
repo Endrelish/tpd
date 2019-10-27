@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Media;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,8 @@ namespace View.Controls
         }
 
         public Func<string> OpenFileDialog { get; } = BrowseForFile;
+
+        public Action PlaySound { get; } = SystemSounds.Beep.Play;
 
         private static string BrowseForFile()
         {

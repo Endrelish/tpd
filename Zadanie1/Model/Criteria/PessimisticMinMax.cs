@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Model.Criteria
 {
-    public class PesimisticMinMax : MinMaxBase
+    public class PessimisticMinMax : MinMaxBase
     {
         protected override double GetCaseCriterion(IList<double> values)
         {
