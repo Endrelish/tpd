@@ -10,7 +10,8 @@ namespace Model.Model
             XStrategy = new Dictionary<int, double>();
             YStrategy = new Dictionary<int, double>();
         }
-        public IDictionary<int, double> XStrategy { get; }
-        public IDictionary<int, double> YStrategy { get; }
+        public IDictionary<int, double> XStrategy { get; set; }
+        public double Payoff { get; set; }
+        public IDictionary<int, double> YStrategy { get; set; }
     }
 }

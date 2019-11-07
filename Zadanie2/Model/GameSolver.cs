@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
 using Model.Model;
 
 namespace Model
@@ -8,19 +9,69 @@ namespace Model
     {
         public GameSolution Solve(PayoffMatrix matrix)
         {
+            var saddle = HasSaddlePoint(matrix);
+            if (saddle != null)
+                return new GameSolution
+                {
+                    Payoff = saddle.Payoff,
+                    XStrategy = new Dictionary<int, double> {[saddle.XStrategy] = 1.0d},
+                    YStrategy = new Dictionary<int, double> {[saddle.YStrategy] = 1.0d}
+                };
             matrix.Reduce();
-            var xStrategies = matrix.Rows.Select(r => (r.ToList().IndexOf(r.Min()), r.Min())).ToList();
-            var yStrategies = matrix.Columns.Select(c => (c.ToList().IndexOf(c.Max()), c.Max())).ToList();
+            var xStrategy = SolveEquations(matrix.Columns.Select(c => (IList<double>)c.ToList()).ToList()).ToList();
+            var yStrategy = SolveEquations(matrix.Rows.Select(r => (IList<double>) r.ToList()).ToList()).ToList();
+            return new GameSolution
+            {
+                XStrategy = GetStrategyFromSolution(xStrategy),
+                YStrategy = GetStrategyFromSolution(yStrategy),
+                Payoff = xStrategy.Last()
+            };
         }
 
-        private bool SaddlePoint(List<(int, double)> xStrategies, List<(int, double)> yStrategies)
+        public Dictionary<int, double> GetStrategyFromSolution(IList<double> solution)
         {
+            return solution
+                .Select((v, i) => new KeyValuePair<int, double>(i, v))
+                .Take(solution.Count - 1)
+                .ToDictionary(v => v.Key, v => v.Value);
+        }
+
+        public IEnumerable<double> SolveEquations(IList<IList<double>> payoffs)
+        {
+            var values = payoffs.Select(p => p.ToList()).ToList();
+            AppendValues(values);
+
+            var left = Matrix<double>.Build.DenseOfRows(values);
+            var right = Vector<double>.Build.DenseOfEnumerable(GetRightSide(left.RowCount));
+
+            return left.Solve(right);
+        }
+
+        private void AppendValues(List<List<double>> values)
+        {
+            values.ForEach(v => v.Add(-1.0d));
+            var last = Enumerable.Repeat(1.0d, values.First().Count - 1).ToList();
+            last.Add(0.0d);
+            values.Add(last);
+        }
+
+        private IEnumerable<double> GetRightSide(int count)
+        {
+            return Enumerable.Repeat(0.0d, count - 1).Concat(new[] {1.0d});
+        }
+
+        private static SaddlePointSolution HasSaddlePoint(PayoffMatrix matrix)
+        {
+            var xStrategies = matrix.Rows.Select(r => (r.ToList().IndexOf(r.Min()), r.Min())).ToList();
+            var yStrategies = matrix.Columns.Select(c => (c.ToList().IndexOf(c.Max()), c.Max())).ToList();
             var maxX = xStrategies.First(x => x.Item2.Equals(xStrategies.Select(s => s.Item2).Max()));
             var xIndex = xStrategies.IndexOf(maxX);
-            var minY = yStrategies.First(y => y.Item2.Equals(yStrategies.Select(s => s.Item2).Max()));
-            var yIndex = minY.Item1;
+            var minY = yStrategies.First(y => y.Item2.Equals(yStrategies.Select(s => s.Item2).Min()));
+            var yIndex = yStrategies.IndexOf(minY);
 
-            return xIndex == yIndex;
+            return xIndex == minY.Item1
+                ? new SaddlePointSolution {XStrategy = xIndex, YStrategy = yIndex, Payoff = maxX.Item2}
+                : null;
         }
     }
 }
