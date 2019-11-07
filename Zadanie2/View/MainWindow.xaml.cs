@@ -27,7 +27,8 @@ namespace View
                     new List<double> {4,1,-3},
                     new List<double> {5,0,-5}
                 });
-            var solution = (new GameSolver()).Solve(matrix1);
+            var solution1 = (new GameSolver()).Solve(matrix1);
+            var solution2 = (new GameSolver()).Solve(matrix2);
             InitializeComponent();
         }
     }

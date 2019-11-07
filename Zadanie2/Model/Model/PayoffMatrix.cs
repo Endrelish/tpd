@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Model.Model
@@ -8,10 +7,14 @@ namespace Model.Model
     public class PayoffMatrix
     {
         private readonly IList<IList<double>> _values;
+        public IList<string> XLabels { get; }
+        public IList<string> YLabels { get; }
 
         public PayoffMatrix(IList<IList<double>> values)
         {
             _values = values;
+            XLabels = Enumerable.Range(1, ColumnsCount + 1).Select(i => $"x{i}").ToList();
+            YLabels = Enumerable.Range(1, RowsCount + 1).Select(i => $"y{i}").ToList();
         }
 
         public int RowsCount => _values.Count;
@@ -31,28 +34,17 @@ namespace Model.Model
             return _values.Select(v => v[index]).ToList();
         }
 
-        public void AddRow(IList<double> values)
+        public void RemoveRow(int row)
         {
-            if(_values[0].Count != values.Count)
-                throw new ArgumentException("Invalid row length");
-            _values.Add(values);
-        }
-
-        public void AddColumn(IList<double> values)
-        {
-            if(_values.Count != values.Count)
-                throw new ArgumentException("Invalid column length");
-
-            for (var i = 0; i < values.Count; i++)
-                _values[i].Add(values[i]);
-        }
-
-        public void RemoveRow(int row) => _values.RemoveAt(row);
+            _values.RemoveAt(row);
+            YLabels.RemoveAt(row);
+        } 
 
         public void RemoveColumn(int column)
         {
             foreach (var val in _values)
                 val.RemoveAt(column);
+            XLabels.RemoveAt(column);
         }
 
         public IEnumerable<IEnumerable<double>> Rows => _values;

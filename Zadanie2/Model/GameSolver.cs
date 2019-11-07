@@ -14,26 +14,26 @@ namespace Model
                 return new GameSolution
                 {
                     Payoff = saddle.Payoff,
-                    XStrategy = new Dictionary<int, double> {[saddle.XStrategy] = 1.0d},
-                    YStrategy = new Dictionary<int, double> {[saddle.YStrategy] = 1.0d}
+                    XStrategy = new Dictionary<string, double> {[matrix.XLabels[saddle.XStrategy]] = 1.0d},
+                    YStrategy = new Dictionary<string, double> {[matrix.YLabels[saddle.YStrategy]] = 1.0d}
                 };
             matrix.Reduce();
             var xStrategy = SolveEquations(matrix.Columns.Select(c => (IList<double>)c.ToList()).ToList()).ToList();
             var yStrategy = SolveEquations(matrix.Rows.Select(r => (IList<double>) r.ToList()).ToList()).ToList();
             return new GameSolution
             {
-                XStrategy = GetStrategyFromSolution(xStrategy),
-                YStrategy = GetStrategyFromSolution(yStrategy),
+                XStrategy = GetStrategyFromSolution(xStrategy, matrix.XLabels),
+                YStrategy = GetStrategyFromSolution(yStrategy, matrix.YLabels),
                 Payoff = xStrategy.Last()
             };
         }
 
-        public Dictionary<int, double> GetStrategyFromSolution(IList<double> solution)
+        public Dictionary<string, double> GetStrategyFromSolution(IList<double> solution, IList<string> labels)
         {
             return solution
                 .Select((v, i) => new KeyValuePair<int, double>(i, v))
                 .Take(solution.Count - 1)
-                .ToDictionary(v => v.Key, v => v.Value);
+                .ToDictionary(v => labels[v.Key], v => v.Value);
         }
 
         public IEnumerable<double> SolveEquations(IList<IList<double>> payoffs)

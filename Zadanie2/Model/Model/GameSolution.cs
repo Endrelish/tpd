@@ -7,11 +7,11 @@ namespace Model.Model
     {
         public GameSolution()
         {
-            XStrategy = new Dictionary<int, double>();
-            YStrategy = new Dictionary<int, double>();
+            XStrategy = new Dictionary<string, double>();
+            YStrategy = new Dictionary<string, double>();
         }
-        public IDictionary<int, double> XStrategy { get; set; }
+        public IDictionary<string, double> XStrategy { get; set; }
         public double Payoff { get; set; }
-        public IDictionary<int, double> YStrategy { get; set; }
+        public IDictionary<string, double> YStrategy { get; set; }
     }
 }
