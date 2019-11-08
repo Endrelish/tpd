@@ -4,9 +4,51 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
+        xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel"
+        Name="Window"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="MainWindow" Height="300" Width="200">
+    <Window.DataContext>
+        <viewModel:MainViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate x:Key="DictionaryItem">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Key}"/>
+                <TextBlock Text=": " />
+                <TextBlock Text="{Binding Value, StringFormat=N2}"/>
+            </StackPanel>
+        </DataTemplate>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
+    <StackPanel>
+        <Button Width="100" Margin="0 10 0 10" Command="{Binding LoadCsvCommand}"
+                CommandParameter="{Binding ElementName=Window, Path=OpenFileDialog}">LOAD CSV</Button>
+        <Button Width="100" Margin="0 10 0 10" Command="{Binding SolveCommand}">SOLVE</Button>
+        <Grid Visibility="{Binding IsSolved, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="X STRATEGY:" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Y STRATEGY:" HorizontalAlignment="Center"/>
+            <ListView Grid.Row="1" Grid.Column="0" ItemTemplate="{StaticResource DictionaryItem}"
+                      ItemsSource="{Binding Solution.XStrategy}" HorizontalAlignment="Center" />
+            <ListView Grid.Row="1" Grid.Column="1" ItemTemplate="{StaticResource DictionaryItem}"
+                      ItemsSource="{Binding Solution.YStrategy}" HorizontalAlignment="Center" />
+            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="PAYOFF: " />
+                <TextBlock Text="{Binding Solution.XPayoff, StringFormat=N2}" />
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="PAYOFF: " />
+                <TextBlock Text="{Binding Solution.YPayoff, StringFormat=N2}" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
 </Window>

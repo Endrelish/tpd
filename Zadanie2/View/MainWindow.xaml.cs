@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Media;
 using System.Windows;
+using Microsoft.Win32;
 using Model;
 using Model.Model;
 
@@ -12,24 +15,20 @@ namespace View
     {
         public MainWindow()
         {
-            var matrix1 = new PayoffMatrix(
-                new List<IList<double>>
-                {
-                    new List<double> {3, -3, 7},
-                    new List<double> {-1, 5, 2},
-                    new List<double> {0, -4, 4}
-                });
-
-            var matrix2 = new PayoffMatrix(
-                new List<IList<double>>
-                {
-                    new List<double> {3,2,1},
-                    new List<double> {4,1,-3},
-                    new List<double> {5,0,-5}
-                });
-            var solution1 = (new GameSolver()).Solve(matrix1);
-            var solution2 = (new GameSolver()).Solve(matrix2);
             InitializeComponent();
+        }
+
+
+        public Func<string> OpenFileDialog { get; } = BrowseForFile;
+
+        public Action PlaySound { get; } = SystemSounds.Beep.Play;
+
+        private static string BrowseForFile()
+        {
+            var dialog = new OpenFileDialog();
+            if (dialog.ShowDialog().GetValueOrDefault())
+                return dialog.FileName;
+            return null;
         }
     }
 }

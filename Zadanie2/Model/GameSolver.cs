@@ -4,7 +4,7 @@ using MathNet.Numerics.LinearAlgebra;
 using Model.Model;
 
 namespace Model
-{
+{       
     public class GameSolver
     {
         public GameSolution Solve(PayoffMatrix matrix)
@@ -13,7 +13,8 @@ namespace Model
             if (saddle != null)
                 return new GameSolution
                 {
-                    Payoff = saddle.Payoff,
+                    XPayoff = saddle.Payoff,
+                    YPayoff = saddle.Payoff,
                     XStrategy = new Dictionary<string, double> {[matrix.XLabels[saddle.XStrategy]] = 1.0d},
                     YStrategy = new Dictionary<string, double> {[matrix.YLabels[saddle.YStrategy]] = 1.0d}
                 };
@@ -24,11 +25,12 @@ namespace Model
             {
                 XStrategy = GetStrategyFromSolution(xStrategy, matrix.XLabels),
                 YStrategy = GetStrategyFromSolution(yStrategy, matrix.YLabels),
-                Payoff = xStrategy.Last()
+                XPayoff = xStrategy.Last(),
+                YPayoff = yStrategy.Last()
             };
         }
 
-        public Dictionary<string, double> GetStrategyFromSolution(IList<double> solution, IList<string> labels)
+        private Dictionary<string, double> GetStrategyFromSolution(IList<double> solution, IList<string> labels)
         {
             return solution
                 .Select((v, i) => new KeyValuePair<int, double>(i, v))
@@ -36,7 +38,7 @@ namespace Model
                 .ToDictionary(v => labels[v.Key], v => v.Value);
         }
 
-        public IEnumerable<double> SolveEquations(IList<IList<double>> payoffs)
+        private IEnumerable<double> SolveEquations(IList<IList<double>> payoffs)
         {
             var values = payoffs.Select(p => p.ToList()).ToList();
             AppendValues(values);
