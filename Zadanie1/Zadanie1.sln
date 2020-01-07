@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", "{859B01C7-EC6F-4247-9D0A-1287A364149B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModel", "ViewModel\ViewModel.csproj", "{DC5FE6B2-1E2F-40F9-BBC2-A70789A27D24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel", "ViewModel\ViewModel.csproj", "{DC5FE6B2-1E2F-40F9-BBC2-A70789A27D24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{B7231A91-1578-4518-B011-F87B60C61821}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{B7231A91-1578-4518-B011-F87B60C61821}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -16,15 +16,15 @@ namespace Model.Solver
 
         private IEnumerable<Path> FindAllPaths(Graph graph)
         {
-            return graph.StartVertices.Select(GetSuccesors).SelectMany(s => s);
+            return graph.StartVertices.Select(GetSuccessors).SelectMany(s => s);
         }
 
-        private IEnumerable<Path> GetSuccesors(Vertex vertex)
+        private IEnumerable<Path> GetSuccessors(Vertex vertex)
         {
             if (!vertex.Successors.Any())
                 return new[] {new Path {Vertices = new List<Vertex> {vertex}}};
 
-            var vertices = vertex.Successors.Select(GetSuccesors).SelectMany(s => s).ToList();
+            var vertices = vertex.Successors.Select(GetSuccessors).SelectMany(s => s).ToList();
             foreach (var v in vertices)
                 v.Vertices.Add(vertex);
 
